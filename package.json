@@ -1,0 +1,24 @@
+{
+  "name": "natours",
+  "version": "1.0.0",
+  "description": "This is the first my project nodejs",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+  "test": "echo \"Error: no test specified\" && exit 1",
+  "start": "nodemon ./app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ducduy0209/Natours.git"
+  },
+  "author": "Duy Ne",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ducduy0209/Natours/issues"
+  },
+  "homepage": "https://github.com/ducduy0209/Natours#readme",
+  "dependencies": {
+    "express": "^4.18.0"
+  }
+}
