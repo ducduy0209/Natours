@@ -1,12 +1,26 @@
-import express from 'express'
+const express = require('express')
+const morgan = require('morgan')
+const path = require('path')
 
 const app = express()
 
-app.get('/', (req, res) => {
-  res.status(200).send('Hello from server side')
+const tourRouter = require('./routes/tourRoutes')
+const userRouter = require('./routes/userRoutes')
+
+// 1) MIDDLEWARES
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'))
+}
+app.use(express.json())
+app.use(express.static(path.join(__dirname, 'public')))
+
+app.use((req, res, next) => {
+  req.requestTime = new Date().toISOString()
+  next()
 })
 
-const PORT = 6868
-app.listen(6868, () => {
-  console.log(`App running on http://localhost:${PORT}`)
-})
+// 3) ROUTES
+app.use('/api/v1/tours', tourRouter)
+app.use('/api/v1/users', userRouter)
+
+module.exports = app
