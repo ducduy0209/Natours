@@ -4,6 +4,9 @@ const path = require('path')
 
 const app = express()
 
+const globalErrorHandler = require('./controllers/ErrorController')
+const AppError = require('./utils/appError')
+
 const tourRouter = require('./routes/tourRoutes')
 const userRouter = require('./routes/userRoutes')
 
@@ -22,5 +25,11 @@ app.use((req, res, next) => {
 // 3) ROUTES
 app.use('/api/v1/tours', tourRouter)
 app.use('/api/v1/users', userRouter)
+
+app.all('*', (req, res, next) => {
+  next(new AppError(`Cannot find ${req.originalUrl} on this server`, 404))
+})
+
+app.use(globalErrorHandler)
 
 module.exports = app
