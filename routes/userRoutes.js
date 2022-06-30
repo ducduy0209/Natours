@@ -10,6 +10,14 @@ router.post('/login', AuthController.login)
 router.post('/forgotPassword', AuthController.forgotPassword)
 router.patch('/resetPassword/:token', AuthController.resetPassword)
 
+router.patch(
+  '/updateMyPassword',
+  AuthController.protect,
+  AuthController.updatePassword
+)
+
+router.patch('/updateMe', AuthController.protect, UserController.updateMe)
+
 router
   .route('/')
   .get(UserController.getAllUsers)
