@@ -17,6 +17,7 @@ router.patch(
 )
 
 router.patch('/updateMe', AuthController.protect, UserController.updateMe)
+router.delete('/deleteMe', AuthController.protect, UserController.deleteMe)
 
 router
   .route('/')
