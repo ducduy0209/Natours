@@ -1,6 +1,7 @@
 const User = require('../models/userModel')
 const catchAsync = require('../utils/catchAsync')
 const AppError = require('../utils/appError')
+const HandlerFactory = require('./HandlerFactory')
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {}
@@ -80,12 +81,7 @@ class UserController {
     })
   }
 
-  deleteUser = (req, res) => {
-    res.status(500).json({
-      status: 'error',
-      message: 'This route is not yet defined'
-    })
-  }
+  deleteUser = HandlerFactory.deleteOne(User)
 }
 
 module.exports = new UserController()

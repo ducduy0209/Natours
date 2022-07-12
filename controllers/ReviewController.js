@@ -1,6 +1,7 @@
 const Review = require('../models/reviewModel')
 const catchAsync = require('../utils/catchAsync')
 // const AppError = require('../utils/appError')
+const HandlerFactory = require('./HandlerFactory')
 
 class ReviewController {
   getAllReviews = catchAsync(async (req, res, next) => {
@@ -29,6 +30,8 @@ class ReviewController {
       }
     })
   })
+
+  deleteReview = HandlerFactory.deleteOne(Review)
 }
 
 module.exports = new ReviewController()
