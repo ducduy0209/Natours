@@ -18,18 +18,16 @@ class ReviewController {
     })
   })
 
-  createReview = catchAsync(async (req, res, next) => {
+  setTourUserIds = (req, res, next) => {
     if (!req.body.tour) req.body.tour = req.params.tourId
     if (!req.body.user) req.body.user = req.user._id
-    const newReview = await Review.create(req.body)
 
-    res.status(200).json({
-      status: 'success',
-      data: {
-        review: newReview
-      }
-    })
-  })
+    next()
+  }
+
+  createReview = HandlerFactory.createOne(Review)
+
+  updateReview = HandlerFactory.updateOne(Review)
 
   deleteReview = HandlerFactory.deleteOne(Review)
 }

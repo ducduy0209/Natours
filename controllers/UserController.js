@@ -60,12 +60,7 @@ class UserController {
     })
   })
 
-  createUser = (req, res) => {
-    res.status(500).json({
-      status: 'error',
-      message: 'This route is not yet defined'
-    })
-  }
+  createUser = HandlerFactory.createOne(User)
 
   getUser = (req, res) => {
     res.status(500).json({
@@ -74,12 +69,8 @@ class UserController {
     })
   }
 
-  updateUser = (req, res) => {
-    res.status(500).json({
-      status: 'error',
-      message: 'This route is not yet defined'
-    })
-  }
+  // Do NOT update Password with this
+  updateUser = HandlerFactory.updateOne(User)
 
   deleteUser = HandlerFactory.deleteOne(User)
 }

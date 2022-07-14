@@ -44,34 +44,9 @@ class TourController {
     })
   })
 
-  createTour = catchAsync(async (req, res, next) => {
-    const newTour = await Tour.create(req.body)
+  createTour = HandlerFactory.createOne(Tour)
 
-    res.status(201).json({
-      status: 'success',
-      data: {
-        tour: newTour
-      }
-    })
-  })
-
-  updateTour = catchAsync(async (req, res, next) => {
-    const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true
-    })
-
-    if (!tour) {
-      return next(new AppError('No tour found with that ID'))
-    }
-
-    res.status(200).json({
-      status: 'success',
-      data: {
-        tour
-      }
-    })
-  })
+  updateTour = HandlerFactory.updateOne(Tour)
 
   deleteTour = HandlerFactory.deleteOne(Tour)
 
