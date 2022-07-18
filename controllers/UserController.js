@@ -12,18 +12,6 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj
 }
 class UserController {
-  getAllUsers = catchAsync(async (req, res) => {
-    const users = await User.find()
-
-    res.status(200).json({
-      status: 'success',
-      results: users.length,
-      data: {
-        users
-      }
-    })
-  })
-
   updateMe = catchAsync(async (req, res, next) => {
     // Create error if user POSTs password date
     if (req.body.password || req.body.passwordConfirm) {
@@ -60,16 +48,23 @@ class UserController {
     })
   })
 
-  createUser = HandlerFactory.createOne(User)
+  getMe = (req, res, next) => {
+    req.params.id = req.user.id
+    next()
+  }
 
-  getUser = (req, res) => {
+  createUser = (req, res) => {
     res.status(500).json({
       status: 'error',
-      message: 'This route is not yet defined'
+      message: 'This route is not defined. Please use /signup instead.'
     })
   }
 
   // Do NOT update Password with this
+  getAllUsers = HandlerFactory.getAll(User)
+
+  getUser = HandlerFactory.getOne(User)
+
   updateUser = HandlerFactory.updateOne(User)
 
   deleteUser = HandlerFactory.deleteOne(User)
