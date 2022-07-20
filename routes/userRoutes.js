@@ -10,20 +10,14 @@ router.post('/login', AuthController.login)
 router.post('/forgotPassword', AuthController.forgotPassword)
 router.patch('/resetPassword/:token', AuthController.resetPassword)
 
-router.patch(
-  '/updateMyPassword',
-  AuthController.protect,
-  AuthController.updatePassword
-)
+router.use(AuthController.protect)
 
-router.get(
-  '/me',
-  AuthController.protect,
-  UserController.getMe,
-  UserController.getUser
-)
-router.patch('/updateMe', AuthController.protect, UserController.updateMe)
-router.delete('/deleteMe', AuthController.protect, UserController.deleteMe)
+router.patch('/updateMyPassword', AuthController.updatePassword)
+router.get('/me', UserController.getMe, UserController.getUser)
+router.patch('/updateMe', UserController.updateMe)
+router.delete('/deleteMe', UserController.deleteMe)
+
+router.use(AuthController.restrictTo('admin'))
 
 router
   .route('/')
