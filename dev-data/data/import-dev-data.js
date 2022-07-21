@@ -11,16 +11,18 @@ const DB = process.env.DATABASE.replace(
   process.env.DATABASE_PASSWORD
 )
 
-mongoose
-  .connect(DB, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useFindAndModify: true,
-    useUnifiedTopology: true
-  })
-  .then(() => {
-    console.log('DB connection successfully!')
-  })
+const connectDB = async () => {
+  try {
+    return mongoose.connect(DB, {
+      useNewUrlParser: true,
+      useCreateIndex: true,
+      useFindAndModify: true,
+      useUnifiedTopology: true
+    })
+  } catch (err) {
+    console.log(err.name, err.message)
+  }
+}
 
 // READ JSON FILE
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours.json`, 'utf8'))
@@ -30,6 +32,7 @@ const reviews = JSON.parse(fs.readFileSync(`${__dirname}/reviews.json`, 'utf8'))
 // IMPORT DATA INTO DB
 const importData = async () => {
   try {
+    await connectDB()
     await Tour.create(tours)
     await User.create(users, { validateBeforeSave: false })
     await Review.create(reviews)
@@ -43,6 +46,7 @@ const importData = async () => {
 // DELETE ALL DATA FROM DB
 const deleteData = async () => {
   try {
+    await connectDB()
     await Tour.deleteMany()
     await User.deleteMany()
     await Review.deleteMany()
