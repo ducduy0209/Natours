@@ -15,16 +15,17 @@ const DB = process.env.DATABASE.replace(
   process.env.DATABASE_PASSWORD
 )
 
-mongoose
-  .connect(DB, {
+const connectDB = async () => {
+  await mongoose.connect(DB, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
     useUnifiedTopology: true
   })
-  .then(() => {
-    console.log('DB connection successfully!')
-  })
+  console.log('DB connection successfully!')
+}
+
+connectDB()
 
 const PORT = process.env.PORT || 8080
 const server = app.listen(PORT, () => {
