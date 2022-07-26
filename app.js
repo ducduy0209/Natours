@@ -16,7 +16,13 @@ const tourRouter = require('./routes/tourRoutes')
 const userRouter = require('./routes/userRoutes')
 const reviewRouter = require('./routes/reviewRoutes')
 
+app.set('view engine', 'pug')
+app.set('views', path.join(__dirname, 'views'))
+
 // 1) GLOBAL MIDDLEWARES
+// Serving static files
+app.use(express.static(path.join(__dirname, 'public')))
+
 // Set secure HTTP header
 app.use(helmet())
 
@@ -47,9 +53,6 @@ app.use(
 // Data sanitization against XSS
 app.use(xss())
 
-// Serving static files
-app.use(express.static(path.join(__dirname, 'public')))
-
 // Limit requests from same API
 const limiter = rateLimit({
   max: 200,
@@ -66,6 +69,13 @@ app.use((req, res, next) => {
 })
 
 // 3) ROUTES
+app.use('/', (req, res) => {
+  res.status(200).render('base', {
+    tour: 'The Hiker Tour',
+    user: 'Duc Duy'
+  })
+})
+
 app.use('/api/v1/tours', tourRouter)
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/reviews', reviewRouter)
