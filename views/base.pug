@@ -4,16 +4,16 @@ html(lang='en')
     meta(charset='UTF-8')
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
-    link(rel='stylesheet', href='css/style.css')
-    link(rel='shortcut icon', href='img/favicon.png', type='image/x-icon')
+    link(rel='stylesheet', href='/css/style.css')
+    link(rel='shortcut icon', href='/img/favicon.png', type='image/x-icon')
     link(href='https://fonts.googleapis.com/css?family=Lato:300,300i,700' rel='stylesheet')
-    title Natours | Exciting tours for adventurous people
+    title Natours | #{title}
   body
     //- Header 
     include _header
     //- Overview
-    section.overview 
-      h1 Hello
+    block content
+      h1 Hi, I'm Duy
 
     //- Footer
     include _footer
