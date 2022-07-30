@@ -25,7 +25,7 @@ class ViewController {
 
     // 3) Render that template using data from 1)
     res.status(200).render('tour', {
-      title: tour.name,
+      title: `${tour.name} Tour`,
       tour
     })
   })

@@ -1,6 +1,10 @@
 extends base
 include _reviewCard
 
+block append head
+  script( src='https://api.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.js' )
+  link( href='https://api.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.css' rel='stylesheet' )
+
 mixin overviewBox(label, text, icon)
   .overview-box__detail
     svg.overview-box__icon
@@ -38,7 +42,7 @@ block content
           +overviewBox('Difficulty', tour.difficulty, 'trending-up')
           +overviewBox('Participants', `${tour.maxGroupSize} people`, 'user')
           +overviewBox('Rating', `${tour.ratingsAverage} / 5`, 'star')
-          
+
         .overview-box__group
           h2.heading-secondary.ma-bt-lg Your tour guides
           each guide in tour.guides 
@@ -48,7 +52,7 @@ block content
               - if(guide.role === 'lead-guide')
                 span.overview-box__label Lead guide
               - if(guide.role === 'guide')
-                  span.overview-box__label Tour guide
+                span.overview-box__label Tour guide
               span.overview-box__text= guide.name
 
 
@@ -64,7 +68,7 @@ block content
         img.picture-box__img(src=`/img/tours/${img}`, alt=`${tour.name} Tour ${i}`, class=`picture-box__img--${i + 1}`)
 
   section.section-map
-    #map
+    #map(data-locations=`${JSON.stringify(tour.locations)}`)
 
   section.section-reviews
     .reviews
