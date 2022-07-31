@@ -22,7 +22,7 @@ router.use((req, res, next) => {
 })
 
 router.get('/', ViewController.getOverview)
-
 router.get('/tour/:slug', ViewController.getTour)
+router.get('/login', ViewController.getLoginForm)
 
 module.exports = router

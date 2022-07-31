@@ -29,6 +29,12 @@ class ViewController {
       tour
     })
   })
+
+  getLoginForm = catchAsync(async (req, res, next) => {
+    res.status(200).render('login', {
+      title: 'Log into your account'
+    })
+  })
 }
 
 module.exports = new ViewController()
