@@ -1,11 +1,11 @@
 const express = require('express')
 const ViewController = require('../controllers/ViewController')
+const AuthController = require('../controllers/AuthController')
 
 const router = express.Router()
 
 const CSP = 'Content-Security-Policy'
 const POLICY =
-  "default-src 'self' https://*.mapbox.com ;" +
   "base-uri 'self';block-all-mixed-content;" +
   "font-src 'self' https: data:;" +
   "frame-ancestors 'self';" +
@@ -20,6 +20,8 @@ router.use((req, res, next) => {
   res.setHeader(CSP, POLICY)
   next()
 })
+
+router.use(AuthController.isLoggedIn)
 
 router.get('/', ViewController.getOverview)
 router.get('/tour/:slug', ViewController.getTour)
