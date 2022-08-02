@@ -1,4 +1,5 @@
 const Tour = require('../models/tourModel')
+const AppError = require('../utils/appError')
 const catchAsync = require('../utils/catchAsync')
 
 class ViewController {
@@ -21,8 +22,9 @@ class ViewController {
       fields: 'rating review user'
     })
 
-    // 2) Build template
+    if (!tour) return next(new AppError('There is no tour with that name', 404))
 
+    // 2) Build template
     // 3) Render that template using data from 1)
     res.status(200).render('tour', {
       title: `${tour.name} Tour`,
@@ -30,11 +32,17 @@ class ViewController {
     })
   })
 
-  getLoginForm = catchAsync(async (req, res, next) => {
+  getLoginForm = (req, res) => {
     res.status(200).render('login', {
       title: 'Log into your account'
     })
-  })
+  }
+
+  getAccount = (req, res) => {
+    res.status(200).render('account', {
+      title: 'Your account'
+    })
+  }
 }
 
 module.exports = new ViewController()

@@ -21,10 +21,9 @@ router.use((req, res, next) => {
   next()
 })
 
-router.use(AuthController.isLoggedIn)
-
-router.get('/', ViewController.getOverview)
-router.get('/tour/:slug', ViewController.getTour)
-router.get('/login', ViewController.getLoginForm)
+router.get('/', AuthController.isLoggedIn, ViewController.getOverview)
+router.get('/tour/:slug', AuthController.isLoggedIn, ViewController.getTour)
+router.get('/login', AuthController.isLoggedIn, ViewController.getLoginForm)
+router.get('/me', AuthController.protect, ViewController.getAccount)
 
 module.exports = router
