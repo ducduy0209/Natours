@@ -2,13 +2,14 @@
 import '@babel/polyfill'
 import { login, logout } from './logged'
 import { displayMap } from './mapbox'
-import { updateData } from './updateSettings'
+import { updateSettings } from './updateSettings'
 
 // DOM ELEMENTS
 const loginForm = document.querySelector('.form.form--login')
 const mapBox = document.getElementById('map')
 const logoutBtn = document.querySelector('.nav__el--loggout')
 const userDataForm = document.querySelector('.form-user-data')
+const userPasswordForm = document.querySelector('.form-user-settings')
 
 // DELEGATION
 if (mapBox) {
@@ -17,11 +18,13 @@ if (mapBox) {
 }
 
 if (loginForm)
-  loginForm.addEventListener('submit', e => {
+  loginForm.addEventListener('submit', async e => {
     e.preventDefault()
+    document.querySelector('.btn--login').textContent = 'Logging...'
     const email = document.querySelector('#email').value
     const password = document.querySelector('#password').value
-    login(email, password)
+    await login(email, password)
+    document.querySelector('.btn--login').textContent = 'Login'
   })
 
 if (logoutBtn)
@@ -31,9 +34,30 @@ if (logoutBtn)
   })
 
 if (userDataForm)
-  userDataForm.addEventListener('submit', e => {
+  userDataForm.addEventListener('submit', async e => {
     e.preventDefault()
-    const name = document.querySelector('#name').value
-    const email = document.querySelector('#email').value
-    updateData(name, email)
+    document.querySelector('.btn--save-data').textContent = 'Saving...'
+    const form = new FormData()
+    form.append('name', document.getElementById('name').value)
+    form.append('email', document.getElementById('email').value)
+    form.append('photo', document.getElementById('photo').files[0])
+    await updateSettings(form, 'data')
+    document.querySelector('.btn--save-data').textContent = 'Save settings'
+  })
+
+if (userPasswordForm)
+  userPasswordForm.addEventListener('submit', async e => {
+    e.preventDefault()
+    document.querySelector('.btn--save-password').textContent = 'Updating...'
+    const passwordCurrent = document.querySelector('#password-current').value
+    const password = document.querySelector('#password').value
+    const passwordConfirm = document.querySelector('#password-confirm').value
+    await updateSettings(
+      { passwordCurrent, password, passwordConfirm },
+      'password'
+    )
+    document.querySelector('.btn--save-password').textContent = 'Save password'
+    document.querySelector('#password-current').value = ''
+    document.querySelector('#password').value = ''
+    document.querySelector('#password-confirm').value = ''
   })
