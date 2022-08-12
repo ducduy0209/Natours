@@ -1,8 +1,38 @@
+const multer = require('multer')
+// const sharp = require('sharp')
 const Tour = require('../models/tourModel')
 const catchAsync = require('../utils/catchAsync')
 const HandlerFactory = require('./HandlerFactory')
 const AppError = require('../utils/appError')
+
+const multerStorage = multer.memoryStorage()
+
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image/')) {
+    cb(null, true)
+  } else {
+    cb(
+      new AppError('Not an image file. Please upload only images.', 400),
+      false
+    )
+  }
+}
+
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter
+})
 class TourController {
+  uploadTourImages = upload.fields([
+    { name: 'imageCover', maxCount: 1 },
+    { name: 'images', maxCount: 3 }
+  ])
+
+  resizeTourImages = (req, res, next) => {
+    console.log(req.files)
+    next()
+  }
+
   aliasTours = (req, res, next) => {
     req.query.limit = 5
     req.query.sort = '-ratingsAverage,price'
