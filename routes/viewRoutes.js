@@ -1,6 +1,7 @@
 const express = require('express')
 const ViewController = require('../controllers/ViewController')
 const AuthController = require('../controllers/AuthController')
+const BookingController = require('../controllers/BookingController')
 
 const router = express.Router()
 
@@ -21,7 +22,12 @@ router.use((req, res, next) => {
   next()
 })
 
-router.get('/', AuthController.isLoggedIn, ViewController.getOverview)
+router.get(
+  '/',
+  BookingController.createBookingCheckout,
+  AuthController.isLoggedIn,
+  ViewController.getOverview
+)
 router.get('/tour/:slug', AuthController.isLoggedIn, ViewController.getTour)
 router.get('/login', AuthController.isLoggedIn, ViewController.getLoginForm)
 router.get('/me', AuthController.protect, ViewController.getAccount)
