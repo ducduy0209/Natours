@@ -2,7 +2,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 const Tour = require('../models/tourModel')
 const Booking = require('../models/bookingModel')
 const catchAsync = require('../utils/catchAsync')
-// const HandlerFactory = require('./HandlerFactory')
+const HandlerFactory = require('./HandlerFactory')
 // const AppError = require('../utils/appError')
 
 class BookingController {
@@ -44,6 +44,16 @@ class BookingController {
     await Booking.create({ user, tour, price })
     res.redirect(req.originalUrl.split('?')[0])
   })
+
+  getAllBookings = HandlerFactory.getAll(Booking)
+
+  getBooking = HandlerFactory.getOne(Booking)
+
+  createBooking = HandlerFactory.createOne(Booking)
+
+  updateBooking = HandlerFactory.updateOne(Booking)
+
+  deleteBooking = HandlerFactory.deleteOne(Booking)
 }
 
 module.exports = new BookingController()

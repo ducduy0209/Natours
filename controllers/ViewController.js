@@ -1,4 +1,5 @@
 const Tour = require('../models/tourModel')
+const Booking = require('../models/bookingModel')
 const AppError = require('../utils/appError')
 const catchAsync = require('../utils/catchAsync')
 
@@ -29,6 +30,19 @@ class ViewController {
     res.status(200).render('tour', {
       title: `${tour.name} Tour`,
       tour
+    })
+  })
+
+  getMyTours = catchAsync(async (req, res, next) => {
+    // 1) Find all booking
+    const bookings = await Booking.find({ user: req.user.id })
+    // 2) Find tours with the returned IDs
+    const tourIDs = bookings.map(el => el.tour)
+    const tours = await Tour.find({ _id: { $in: tourIDs } })
+
+    res.status(200).render('overview', {
+      title: 'My tours',
+      tours
     })
   })
 
