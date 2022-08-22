@@ -48,6 +48,12 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
     select: false
+  },
+  emailConfirm: String,
+  emailConfirmExpired: Date,
+  isConfirmEmail: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -82,16 +88,23 @@ userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
   return false
 }
 
-userSchema.methods.createPasswordResetToken = function() {
-  const resetToken = crypto.randomBytes(32).toString('hex')
+userSchema.methods.createCryptoToken = function(type) {
+  const token = crypto.randomBytes(32).toString('hex')
+  if (type === 'reset') {
+    this.passwordResetToken = crypto
+      .createHash('sha256')
+      .update(token)
+      .digest('hex')
 
-  this.passwordResetToken = crypto
+    this.passwordResetExpired = Date.now() + 10 * 60 * 1000
+  }
+  this.emailConfirm = crypto
     .createHash('sha256')
-    .update(resetToken)
+    .update(token)
     .digest('hex')
 
-  this.passwordResetExpired = Date.now() + 10 * 60 * 1000
-  return resetToken
+  this.emailConfirmExpired = Date.now() + 30 * 24 * 60 * 60 * 1000
+  return token
 }
 
 userSchema.pre('save', function(next) {

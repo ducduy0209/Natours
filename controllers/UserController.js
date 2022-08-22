@@ -45,7 +45,12 @@ class UserController {
   resizeUserPhoto = catchAsync(async (req, res, next) => {
     if (!req.file) return next()
 
-    req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`
+    if (req.user.id)
+      req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`
+    else {
+      const nameUser = req.body.name.replace(' ', '')
+      req.file.filename = `user-${nameUser}-${Date.now()}.jpeg`
+    }
 
     await sharp(req.file.buffer)
       .resize(500, 500)

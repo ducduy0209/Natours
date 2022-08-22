@@ -57,6 +57,12 @@ class ViewController {
       title: 'Your account'
     })
   }
+
+  getSignupForm = (req, res) => {
+    res.status(200).render('signup', {
+      title: 'Signup your account'
+    })
+  }
 }
 
 module.exports = new ViewController()

@@ -29,8 +29,16 @@ router.get(
   ViewController.getOverview
 )
 router.get('/tour/:slug', AuthController.isLoggedIn, ViewController.getTour)
-router.get('/login', AuthController.isLoggedIn, ViewController.getLoginForm)
 router.get('/me', AuthController.protect, ViewController.getAccount)
 router.get('/my-tours', AuthController.protect, ViewController.getMyTours)
+router.get(
+  '/confirm-email/:token',
+  AuthController.isLoggedIn,
+  AuthController.confirmEmail
+)
+router.use(AuthController.isLoggedIn, AuthController.redirectIfLoggedIn)
+
+router.get('/login', ViewController.getLoginForm)
+router.get('/signup', ViewController.getSignupForm)
 
 module.exports = router

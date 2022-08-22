@@ -42,11 +42,15 @@ class AuthController {
     const newUser = await User.create({
       name: req.body.name,
       email: req.body.email,
+      photo: req.body.photo,
       password: req.body.password,
       passwordConfirm: req.body.passwordConfirm
     })
-
-    const url = `${req.protocol}://${req.get('host')}/me`
+    const resetToken = newUser.createCryptoToken()
+    await newUser.save({ validateBeforeSave: false })
+    const url = `${req.protocol}://${req.get(
+      'host'
+    )}/confirm-email/${resetToken}`
     await new Email(newUser, url).sendWelcome()
     createSendToken(newUser, 201, res)
   })
@@ -141,6 +145,7 @@ class AuthController {
           return next()
         }
         // THERE IS A LOGGED IN USER
+        req.user = currentUser
         res.locals.user = currentUser
         return next()
       }
@@ -169,7 +174,7 @@ class AuthController {
       return next(new AppError('There is no user with email address', 404))
     }
     // 2) Generate the random reset token
-    const resetToken = user.createPasswordResetToken()
+    const resetToken = user.createCryptoToken('reset')
     await user.save({ validateBeforeSave: false })
 
     // 3) Send it to user's email
@@ -247,6 +252,37 @@ class AuthController {
     // 4) Log user in, send JWT
     createSendToken(user, 200, res)
   })
+
+  confirmEmail = catchAsync(async (req, res, next) => {
+    const hasdedToken = crypto
+      .createHash('sha256')
+      .update(req.params.token)
+      .digest('hex')
+
+    const user = await User.findOne({
+      emailConfirm: hasdedToken,
+      emailConfirmExpired: { $gt: Date.now() }
+    })
+    // If token is invalid or has expired, and there is user, set the new password
+    if (!user) {
+      return next(new AppError('Token is invalid or has expired!', 400))
+    }
+
+    user.emailConfirm = undefined
+    user.emailConfirmExpired = undefined
+    user.isConfirmEmail = true
+    await user.save({ validateBeforeSave: false })
+
+    res.render('confirmEmailSuccess', {
+      title: 'Active your account successfully'
+    })
+  })
+
+  redirectIfLoggedIn = (req, res, next) => {
+    if (req.user) return res.redirect(`${req.protocol}://${req.get('host')}/`)
+
+    next()
+  }
 }
 
 module.exports = new AuthController()

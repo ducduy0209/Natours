@@ -12,6 +12,9 @@ const logoutBtn = document.querySelector('.nav__el--loggout')
 const userDataForm = document.querySelector('.form-user-data')
 const userPasswordForm = document.querySelector('.form-user-settings')
 const bookTourBtn = document.getElementById('book-tour')
+const notifyConfirmEmail = document.querySelector(
+  '.notification__confirm-email'
+)
 
 // DELEGATION
 if (mapBox) {
@@ -71,3 +74,8 @@ if (bookTourBtn)
     const { tourId } = e.target.dataset
     bookTour(tourId)
   })
+
+if (notifyConfirmEmail)
+  window.setTimeout(() => {
+    location.assign('/')
+  }, 3000)

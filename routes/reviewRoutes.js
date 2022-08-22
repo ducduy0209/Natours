@@ -10,6 +10,7 @@ router
   .route('/')
   .get(ReviewController.getAllReviews)
   .post(
+    ReviewController.restrictToReview,
     AuthController.restrictTo('user'),
     ReviewController.setTourUserIds,
     ReviewController.createReview

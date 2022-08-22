@@ -1,3 +1,7 @@
+if user
+  if !user.isConfirmEmail
+    .alert.alert--success Please go to your email and activate your account 
+
 header.header 
   nav.nav.nav--tours
     a.nav__el(href='/') All tours 

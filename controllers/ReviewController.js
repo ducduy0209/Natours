@@ -1,5 +1,8 @@
 const Review = require('../models/reviewModel')
+const Booking = require('../models/bookingModel')
+const catchAsync = require('../utils/catchAsync')
 const HandlerFactory = require('./HandlerFactory')
+const AppError = require('../utils/appError')
 // const catchAsync = require('../utils/catchAsync')
 // const AppError = require('../utils/appError')
 
@@ -10,6 +13,17 @@ class ReviewController {
 
     next()
   }
+
+  restrictToReview = catchAsync(async (req, res, next) => {
+    const tourId = req.params.tourId || req.body.tour
+    const userId = req.user._id
+
+    const query = await Booking.findOne({ user: userId, tour: tourId })
+    if (!query) {
+      return next(new AppError('You must book to review this tour!', 403))
+    }
+    next()
+  })
 
   getAllReviews = HandlerFactory.getAll(Review)
 
