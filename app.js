@@ -3,6 +3,7 @@ const morgan = require('morgan')
 const path = require('path')
 const rateLimit = require('express-rate-limit')
 const helmet = require('helmet')
+const cors = require('cors')
 const mongoSanitize = require('express-mongo-sanitize')
 const xss = require('xss-clean')
 const hpp = require('hpp')
@@ -30,6 +31,21 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use(
   helmet({
     crossOriginEmbedderPolicy: false
+  })
+)
+
+app.options(
+  '*',
+  cors({
+    origin: `http://localhost:${process.env.PORT}`,
+    optionsSuccessStatus: 200
+  })
+)
+
+app.use(
+  cors({
+    origin: `http://localhost:${process.env.PORT}`,
+    optionsSuccessStatus: 200
   })
 )
 

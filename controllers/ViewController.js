@@ -63,6 +63,18 @@ class ViewController {
       title: 'Signup your account'
     })
   }
+
+  getForgotPasswordForm = (req, res) => {
+    res.status(200).render('forgotPassword', {
+      title: 'Forgot your password'
+    })
+  }
+
+  resetPasswordForm = (req, res) => {
+    res.status(200).render('resetPassword', {
+      title: 'Reset your password'
+    })
+  }
 }
 
 module.exports = new ViewController()

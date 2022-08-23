@@ -4,6 +4,8 @@ import { login, logout } from './logged'
 import { displayMap } from './mapbox'
 import { updateSettings } from './updateSettings'
 import { bookTour } from './stripe'
+import { signup } from './signup'
+import { forgotPassword, resetPassword } from './forgotAndReset'
 
 // DOM ELEMENTS
 const loginForm = document.querySelector('.form.form--login')
@@ -15,6 +17,9 @@ const bookTourBtn = document.getElementById('book-tour')
 const notifyConfirmEmail = document.querySelector(
   '.notification__confirm-email'
 )
+const signupForm = document.querySelector('.form.form--signup')
+const forgotForm = document.querySelector('.form.form--forgot')
+const resetForm = document.querySelector('.form.form--reset')
 
 // DELEGATION
 if (mapBox) {
@@ -32,10 +37,26 @@ if (loginForm)
     document.querySelector('.btn--login').textContent = 'Login'
   })
 
-if (logoutBtn)
-  logoutBtn.addEventListener('click', e => {
+if (logoutBtn) logoutBtn.addEventListener('click', logout)
+
+if (signupForm)
+  signupForm.addEventListener('submit', async e => {
     e.preventDefault()
-    logout()
+    document.querySelector('.btn--signup').textContent = 'Processing...'
+    const form = new FormData()
+    form.append('name', document.getElementById('name').value)
+    form.append('email', document.getElementById('email').value)
+    form.append(
+      'photo',
+      document.getElementById('photo').files[0] || 'default.jpg'
+    )
+    form.append('password', document.getElementById('password').value)
+    form.append(
+      'passwordConfirm',
+      document.getElementById('passwordConfirm').value
+    )
+    await signup(form)
+    document.querySelector('.btn--signup').textContent = 'Signup'
   })
 
 if (userDataForm)
@@ -79,3 +100,22 @@ if (notifyConfirmEmail)
   window.setTimeout(() => {
     location.assign('/')
   }, 3000)
+
+if (forgotForm)
+  forgotForm.addEventListener('submit', async e => {
+    e.preventDefault()
+    const email = document.getElementById('email').value
+    document.querySelector('.btn--forgot').textContent = 'Processing...'
+    await forgotPassword(email)
+    document.querySelector('.btn--forgot').textContent = 'Send email'
+  })
+
+if (resetForm)
+  resetForm.addEventListener('submit', async e => {
+    e.preventDefault()
+    const password = document.getElementById('password').value
+    const passwordConfirm = document.getElementById('passwordConfirm').value
+    document.querySelector('.btn--reset').textContent = 'Processing...'
+    await resetPassword(password, passwordConfirm)
+    document.querySelector('.btn--reset').textContent = 'Reset Password'
+  })

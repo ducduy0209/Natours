@@ -1248,6 +1248,8 @@ body {
   margin: 0 auto;
 }
 
+.reset-form,
+.forgot-form,
 .signup-form,
 .login-form {
   margin: 0 auto;
@@ -1349,4 +1351,16 @@ body {
   box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15);
   -webkit-transform: translateY(-2px);
   transform: translateY(-2px);
+}
+
+.link__forgotPassword {
+  text-align: right;
+}
+
+#forgot-password__link {
+  font-size: 13px;
+  background-image: -webkit-gradient( linear, left top, right top, from(#7dd56f), to(#28b487) );
+  background-image: linear-gradient(to right, #7dd56f, #28b487);
+  -webkit-background-clip: text;
+  color: transparent;
 }

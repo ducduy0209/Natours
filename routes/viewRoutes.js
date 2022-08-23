@@ -38,6 +38,8 @@ router.get(
 )
 router.use(AuthController.isLoggedIn, AuthController.redirectIfLoggedIn)
 
+router.get('/forgot-password', ViewController.getForgotPasswordForm)
+router.get('/reset-password/:token', ViewController.resetPasswordForm)
 router.get('/login', ViewController.getLoginForm)
 router.get('/signup', ViewController.getSignupForm)
 

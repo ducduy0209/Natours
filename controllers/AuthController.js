@@ -42,10 +42,12 @@ class AuthController {
     const newUser = await User.create({
       name: req.body.name,
       email: req.body.email,
-      photo: req.body.photo,
       password: req.body.password,
       passwordConfirm: req.body.passwordConfirm
     })
+    if (req.file) {
+      newUser.photo = req.file.filename
+    }
     const resetToken = newUser.createCryptoToken()
     await newUser.save({ validateBeforeSave: false })
     const url = `${req.protocol}://${req.get(
@@ -182,7 +184,7 @@ class AuthController {
     try {
       const resetURL = `${req.protocol}://${req.get(
         'host'
-      )}/api/v1/users/resetPassword/${resetToken}`
+      )}/reset-password/${resetToken}`
 
       await new Email(user, resetURL).sendPasswordReset()
     } catch (err) {
