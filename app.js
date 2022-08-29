@@ -8,6 +8,7 @@ const mongoSanitize = require('express-mongo-sanitize')
 const xss = require('xss-clean')
 const hpp = require('hpp')
 const cookieParser = require('cookie-parser')
+const compression = require('compression')
 
 const app = express()
 
@@ -60,6 +61,8 @@ app.use(
   })
 )
 
+app.use(compression())
+
 // Data sanitization against XSS
 app.use(xss())
 
@@ -73,10 +76,10 @@ const limiter = rateLimit({
 app.use('/api', limiter)
 
 // Test middlewares
-app.use((req, res, next) => {
-  req.requestTime = new Date().toISOString()
-  next()
-})
+// app.use((req, res, next) => {
+//   req.requestTime = new Date().toISOString()
+//   next()
+// })
 
 // 3) ROUTES
 
