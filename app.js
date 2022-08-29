@@ -33,22 +33,7 @@ app.use(
     crossOriginEmbedderPolicy: false
   })
 )
-
-app.options(
-  '*',
-  cors({
-    origin: `http://localhost:${process.env.PORT}`,
-    optionsSuccessStatus: 200
-  })
-)
-
-app.use(
-  cors({
-    origin: `http://localhost:${process.env.PORT}`,
-    optionsSuccessStatus: 200
-  })
-)
-
+app.use(cors())
 // Development logging
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'))
