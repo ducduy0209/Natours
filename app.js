@@ -34,7 +34,7 @@ app.use(
     crossOriginEmbedderPolicy: false
   })
 )
-app.use(cors())
+// app.use(cors())
 // Development logging
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'))
@@ -63,6 +63,8 @@ app.use(
 
 app.use(compression())
 
+app.use(cors())
+
 // Data sanitization against XSS
 app.use(xss())
 
@@ -74,12 +76,6 @@ const limiter = rateLimit({
 })
 
 app.use('/api', limiter)
-
-// Test middlewares
-// app.use((req, res, next) => {
-//   req.requestTime = new Date().toISOString()
-//   next()
-// })
 
 // 3) ROUTES
 

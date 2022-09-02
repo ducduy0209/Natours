@@ -279,12 +279,6 @@ class AuthController {
       title: 'Active your account successfully'
     })
   })
-
-  redirectIfLoggedIn = (req, res, next) => {
-    if (req.user) return res.redirect(`${req.protocol}://${req.get('host')}/`)
-
-    next()
-  }
 }
 
 module.exports = new AuthController()

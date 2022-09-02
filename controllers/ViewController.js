@@ -47,7 +47,10 @@ class ViewController {
   })
 
   getLoginForm = (req, res) => {
-    res.status(200).render('login', {
+    if (req.user) {
+      return res.status(200).redirect(`/`)
+    }
+    return res.status(200).render('login', {
       title: 'Log into your account'
     })
   }
@@ -59,19 +62,28 @@ class ViewController {
   }
 
   getSignupForm = (req, res) => {
-    res.status(200).render('signup', {
+    if (req.user) {
+      return res.status(200).redirect(`/`)
+    }
+    return res.status(200).render('signup', {
       title: 'Signup your account'
     })
   }
 
   getForgotPasswordForm = (req, res) => {
-    res.status(200).render('forgotPassword', {
+    if (req.user) {
+      return res.status(200).redirect(`/`)
+    }
+    return res.status(200).render('forgotPassword', {
       title: 'Forgot your password'
     })
   }
 
   resetPasswordForm = (req, res) => {
-    res.status(200).render('resetPassword', {
+    if (req.user) {
+      return res.status(200).redirect(`/`)
+    }
+    return res.status(200).render('resetPassword', {
       title: 'Reset your password'
     })
   }

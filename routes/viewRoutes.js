@@ -36,7 +36,7 @@ router.get(
   AuthController.isLoggedIn,
   AuthController.confirmEmail
 )
-router.use(AuthController.isLoggedIn, AuthController.redirectIfLoggedIn)
+router.use(AuthController.isLoggedIn)
 
 router.get('/forgot-password', ViewController.getForgotPasswordForm)
 router.get('/reset-password/:token', ViewController.resetPasswordForm)
