@@ -1,0 +1,18 @@
+.model__review 
+  .model-review__overlay 
+  .model-review__body 
+    h2.heading-secondary.ma-bt-lg Review this tour now
+    form.form.form--review
+      .form__group
+        label.form__label(for='review-text') Review
+        input#review-text.form__input(type='text', placeholder='I love it!', required)
+      .form__group
+        label.form__label(for='review-rating') Rating
+        .form__rating
+          input#subtract(type='button', value='-')
+          input#review-rating.form__input(type='number', disabled, required, value='1')
+          input#add(type='button', value='+')
+      .form__group
+        if tour.id
+          button.btn.btn--green.btn--review(data-tour-id-review=`${tour.id}`) Review
+    i.fa-solid.fa-xmark.close__review

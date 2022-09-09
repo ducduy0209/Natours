@@ -1,5 +1,6 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 const Tour = require('../models/tourModel')
+const User = require('../models/userModel')
 const Booking = require('../models/bookingModel')
 const catchAsync = require('../utils/catchAsync')
 const HandlerFactory = require('./HandlerFactory')
@@ -42,6 +43,7 @@ class BookingController {
     if (!tour || !user || !price) return next()
 
     await Booking.create({ user, tour, price })
+    await User.findByIdAndUpdate(user, { $push: { bookings: tour } })
     res.redirect(req.originalUrl.split('?')[0])
   })
 

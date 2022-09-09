@@ -54,7 +54,19 @@ const userSchema = new mongoose.Schema({
   isConfirmEmail: {
     type: Boolean,
     default: false
-  }
+  },
+  favouriteTours: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Tour'
+    }
+  ],
+  bookings: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Tour'
+    }
+  ]
 })
 
 userSchema.pre('save', async function(next) {
@@ -116,6 +128,18 @@ userSchema.pre('save', function(next) {
 
 userSchema.pre(/^find/, function(next) {
   this.find({ active: { $ne: false } })
+
+  next()
+})
+
+userSchema.pre(/^find/, function(next) {
+  this.populate({
+    path: 'favouriteTours',
+    select: 'name'
+  }).populate({
+    path: 'bookings',
+    select: 'name'
+  })
 
   next()
 })

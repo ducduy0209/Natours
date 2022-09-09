@@ -103,6 +103,29 @@ class UserController {
     })
   })
 
+  handleLikeTour = catchAsync(async (req, res, next) => {
+    const check = await User.find({
+      _id: req.user._id,
+      favouriteTours: { $elemMatch: { $eq: req.body.tourId } }
+    })
+    if (check.length > 0) {
+      await User.findByIdAndUpdate(req.user._id, {
+        $pull: { favouriteTours: { $eq: req.body.tourId } }
+      })
+      return res.status(200).json({
+        status: 'success',
+        message: 'The tour has been removed from your favorites'
+      })
+    }
+    await User.findByIdAndUpdate(req.user._id, {
+      $push: { favouriteTours: req.body.tourId }
+    })
+    return res.status(200).json({
+      status: 'success',
+      message: 'The tour has been added to your favorites'
+    })
+  })
+
   getMe = (req, res, next) => {
     req.params.id = req.user.id
     next()

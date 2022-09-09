@@ -14,6 +14,19 @@ header.header
     img(src='/img/logo-white.png' alt='Natours logo')
   nav.nav.nav--user
     if user
+      if tour
+        - let count = 0
+        each favouriteTour in user.favouriteTours
+          - if(JSON.stringify(tour.id) === JSON.stringify(favouriteTour._id))
+            - count = 1
+        if count > 0
+          i.fa-regular.fa-heart.heart--icon.hide(data-tour-id=`${tour.id}`)
+          i.fa-solid.fa-heart.heart--icon__liked.active(data-tour-id=`${tour.id}`)
+        else 
+          i.fa-regular.fa-heart.heart--icon.active(data-tour-id=`${tour.id}`)
+          i.fa-solid.fa-heart.heart--icon__liked.hide(data-tour-id=`${tour.id}`)
+        p.description__heart
+        .circle-loading.hide
       a.nav__el.nav__el--loggout Log out 
       a(href='/me').nav__el
         img(src=`/img/users/${user.photo}` alt=`Photo of ${user.name}`).nav__user-img

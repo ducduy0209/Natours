@@ -71,6 +71,13 @@ block content
     #map(data-locations=`${JSON.stringify(tour.locations)}`)
 
   section.section-reviews
+    if user
+      - let count = 0
+        each bookingTour in user.bookings
+          - if(JSON.stringify(tour.id) === JSON.stringify(bookingTour._id))
+            - count = 1
+        if count > 0
+          .btn__review-popup.btn#reviewBtnPopup Review now
     .reviews
       each review in tour.reviews
         +reviewCard(review)
@@ -85,9 +92,19 @@ block content
         h2.heading-secondary What are you waiting for?
         p.cta__text= `${tour.duration} days. 1 adventure. Infinite memories. Make it yours today!`
         if user
-          if !user.isConfirmEmail
-            a.btn.btn--green.span-all-rows(href='https://mail.google.com/mail/u/0/#inbox') Go to active your account!
+          - let count = 0
+          each bookingTour in user.bookings
+            - if(JSON.stringify(tour.id) === JSON.stringify(bookingTour._id))
+              - count = 1
+          if count > 0
+            a.btn.btn--green.span-all-rows(href='#reviewBtnPopup') Review tour now!
           else 
-            button.btn.btn--green.span-all-rows#book-tour(data-tour-id=`${tour.id}`) Book tour now!
+            if !user.isConfirmEmail
+              a.btn.btn--green.span-all-rows(href='https://mail.google.com/mail/u/0/#inbox') Go to active your account!
+            else 
+              button.btn.btn--green.span-all-rows#book-tour(data-tour-id=`${tour.id}`) Book tour now!
         else 
           a.btn.btn--green.span-all-rows(href='/login') Login to book tour now!
+
+  if user
+    include _modelReview

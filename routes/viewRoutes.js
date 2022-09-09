@@ -28,9 +28,19 @@ router.get(
   AuthController.isLoggedIn,
   ViewController.getOverview
 )
+router.get(
+  '/my-reviews',
+  AuthController.isLoggedIn,
+  ViewController.getMyReviews
+)
 router.get('/tour/:slug', AuthController.isLoggedIn, ViewController.getTour)
 router.get('/me', AuthController.protect, ViewController.getAccount)
 router.get('/my-tours', AuthController.protect, ViewController.getMyTours)
+router.get(
+  '/my-favourite-tours',
+  AuthController.protect,
+  ViewController.getMyFavouriteTours
+)
 router.get(
   '/confirm-email/:token',
   AuthController.isLoggedIn,

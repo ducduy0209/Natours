@@ -1,0 +1,51 @@
+extends base
+
+mixin navItem(link, text, icon, active)
+  li(class=`${active ? 'side-nav--active' : ''}`)
+    a(href=`${link}`)
+      svg
+        use(xlink:href=`/img/icons.svg#icon-${icon}`)
+      | #{text}
+
+mixin reviewItem(link, name, review, rating, reviewId)
+  li.user-view__item-review 
+    .user-view__item-review-left 
+      a(href=`${link}`).review__name-tour= `${name} tour`
+      p.review__content= review
+      span.review__rating= `${rating} / 5`
+    .user-view__item-review-right 
+      i.fa-solid.fa-pen.review__edit-icon(data-review-id=`${reviewId}`)
+      i.fa-solid.fa-trash.review__trash-icon(data-review-id-delete=`${reviewId}`)
+
+block content 
+  main.main
+    .user-view
+      nav.user-view__menu
+        ul.side-nav
+          +navItem('/me', 'Settings', 'settings')
+          +navItem('/my-tours', 'My bookings', 'briefcase')
+          +navItem('#', 'My reviews', 'star', true)
+          +navItem('/my-favourite-tours', 'My favourite tours', 'heart')
+          +navItem('#', 'Billing', 'credit-card')
+      .user-view__content
+        .user-view__review-container
+          h2.heading-secondary.ma-bt-md Your Reviews
+          ul.user-view__list-reviews
+            each tour in tours
+              include _modelReview
+              each review in reviews 
+                - if(JSON.stringify(tour.id) === JSON.stringify(review.tour))
+                  +reviewItem(`/tour/${tour.slug}`, tour.name, review.review, review.rating, review._id)
+
+      .model__deleteReview
+        .model__deleteReview-overlay 
+        .model__deleteReview-body 
+          h2.heading-secondary.ma-bt-lg Are you sure you want to delete your review ?
+          form.form.model__deleteReview-form
+            .form__group.model__deleteReview-btns
+              button.model__deleteReview-btn-delete.btn.btn--green Delete
+              button.model__deleteReview-btn-cancel.btn Cancel
+      
+
+
+

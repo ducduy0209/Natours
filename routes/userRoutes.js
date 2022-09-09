@@ -28,6 +28,8 @@ router.patch(
 )
 router.delete('/deleteMe', UserController.deleteMe)
 
+router.route('/likeTour').patch(UserController.handleLikeTour)
+
 router.use(AuthController.restrictTo('admin'))
 
 router

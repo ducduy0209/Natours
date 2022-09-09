@@ -6,20 +6,32 @@ import { updateSettings } from './updateSettings'
 import { bookTour } from './stripe'
 import { signup } from './signup'
 import { forgotPassword, resetPassword } from './forgotAndReset'
+import { handleRangtings, hideModel } from './handleReviewModel'
+import { handleReviewTour, deleteReviewTour } from './review'
+import { handleLikeTourBrowser } from './handleLikeTour'
 
+const $ = document.querySelector.bind(document)
+const $$ = document.querySelectorAll.bind(document)
 // DOM ELEMENTS
-const loginForm = document.querySelector('.form.form--login')
-const mapBox = document.getElementById('map')
-const logoutBtn = document.querySelector('.nav__el--loggout')
-const userDataForm = document.querySelector('.form-user-data')
-const userPasswordForm = document.querySelector('.form-user-settings')
-const bookTourBtn = document.getElementById('book-tour')
-const notifyConfirmEmail = document.querySelector(
-  '.notification__confirm-email'
-)
-const signupForm = document.querySelector('.form.form--signup')
-const forgotForm = document.querySelector('.form.form--forgot')
-const resetForm = document.querySelector('.form.form--reset')
+const loginForm = $('.form.form--login')
+const mapBox = $('#map')
+const logoutBtn = $('.nav__el--loggout')
+const userDataForm = $('.form-user-data')
+const userPasswordForm = $('.form-user-settings')
+const bookTourBtn = $('#book-tour')
+const notifyConfirmEmail = $('.notification__confirm-email')
+const signupForm = $('.form.form--signup')
+const forgotForm = $('.form.form--forgot')
+const resetForm = $('.form.form--reset')
+const reviewPopup = $('.btn.btn__review-popup')
+const reviewForm = $('.form.form--review')
+const likedTourBtn = $('.heart--icon__liked.active')
+const likeTourBtn = $('.heart--icon.active')
+const editReviewBtn = $$('.review__edit-icon')
+const deleteReviewBtnsPopup = $$('.review__trash-icon')
+const deleteReviewForm = $('.model__deleteReview-form')
+const deleteReviewBtn = $('.model__deleteReview-btn-delete')
+const cancelReviewDeleteBtn = $('.model__deleteReview-btn-cancel')
 
 // DELEGATION
 if (mapBox) {
@@ -30,11 +42,11 @@ if (mapBox) {
 if (loginForm)
   loginForm.addEventListener('submit', async e => {
     e.preventDefault()
-    document.querySelector('.btn--login').textContent = 'Logging...'
-    const email = document.querySelector('#email').value
-    const password = document.querySelector('#password').value
+    $('.btn--login').textContent = 'Logging...'
+    const email = $('#email').value
+    const password = $('#password').value
     await login(email, password)
-    document.querySelector('.btn--login').textContent = 'Login'
+    $('.btn--login').textContent = 'Login'
   })
 
 if (logoutBtn) logoutBtn.addEventListener('click', logout)
@@ -42,50 +54,44 @@ if (logoutBtn) logoutBtn.addEventListener('click', logout)
 if (signupForm)
   signupForm.addEventListener('submit', async e => {
     e.preventDefault()
-    document.querySelector('.btn--signup').textContent = 'Processing...'
+    $('.btn--signup').textContent = 'Processing...'
     const form = new FormData()
-    form.append('name', document.getElementById('name').value)
-    form.append('email', document.getElementById('email').value)
-    form.append(
-      'photo',
-      document.getElementById('photo').files[0] || 'default.jpg'
-    )
-    form.append('password', document.getElementById('password').value)
-    form.append(
-      'passwordConfirm',
-      document.getElementById('passwordConfirm').value
-    )
+    form.append('name', $('#name').value)
+    form.append('email', $('#email').value)
+    form.append('photo', $('#photo').files[0] || 'default.jpg')
+    form.append('password', $('#password').value)
+    form.append('passwordConfirm', $('#passwordConfirm').value)
     await signup(form)
-    document.querySelector('.btn--signup').textContent = 'Signup'
+    $('.btn--signup').textContent = 'Signup'
   })
 
 if (userDataForm)
   userDataForm.addEventListener('submit', async e => {
     e.preventDefault()
-    document.querySelector('.btn--save-data').textContent = 'Saving...'
+    $('.btn--save-data').textContent = 'Saving...'
     const form = new FormData()
-    form.append('name', document.getElementById('name').value)
-    form.append('email', document.getElementById('email').value)
-    form.append('photo', document.getElementById('photo').files[0])
+    form.append('name', $('#name').value)
+    form.append('email', $('#email').value)
+    form.append('photo', $('#photo').files[0])
     await updateSettings(form, 'data')
-    document.querySelector('.btn--save-data').textContent = 'Save settings'
+    $('.btn--save-data').textContent = 'Save settings'
   })
 
 if (userPasswordForm)
   userPasswordForm.addEventListener('submit', async e => {
     e.preventDefault()
-    document.querySelector('.btn--save-password').textContent = 'Updating...'
-    const passwordCurrent = document.querySelector('#password-current').value
-    const password = document.querySelector('#password').value
-    const passwordConfirm = document.querySelector('#password-confirm').value
+    $('.btn--save-password').textContent = 'Updating...'
+    const passwordCurrent = $('#password-current').value
+    const password = $('#password').value
+    const passwordConfirm = $('#password-confirm').value
     await updateSettings(
       { passwordCurrent, password, passwordConfirm },
       'password'
     )
-    document.querySelector('.btn--save-password').textContent = 'Save password'
-    document.querySelector('#password-current').value = ''
-    document.querySelector('#password').value = ''
-    document.querySelector('#password-confirm').value = ''
+    $('.btn--save-password').textContent = 'Save password'
+    $('#password-current').value = ''
+    $('#password').value = ''
+    $('#password-confirm').value = ''
   })
 
 if (bookTourBtn)
@@ -104,18 +110,83 @@ if (notifyConfirmEmail)
 if (forgotForm)
   forgotForm.addEventListener('submit', async e => {
     e.preventDefault()
-    const email = document.getElementById('email').value
-    document.querySelector('.btn--forgot').textContent = 'Processing...'
+    const email = $('#email').value
+    $('.btn--forgot').textContent = 'Processing...'
     await forgotPassword(email)
-    document.querySelector('.btn--forgot').textContent = 'Send email'
+    $('.btn--forgot').textContent = 'Send email'
   })
 
 if (resetForm)
   resetForm.addEventListener('submit', async e => {
     e.preventDefault()
-    const password = document.getElementById('password').value
-    const passwordConfirm = document.getElementById('passwordConfirm').value
-    document.querySelector('.btn--reset').textContent = 'Processing...'
+    const password = $('#password').value
+    const passwordConfirm = $('#passwordConfirm').value
+    $('.btn--reset').textContent = 'Processing...'
     await resetPassword(password, passwordConfirm)
-    document.querySelector('.btn--reset').textContent = 'Reset Password'
+    $('.btn--reset').textContent = 'Reset Password'
   })
+
+if (editReviewBtn) {
+  for (const btn of editReviewBtn) {
+    btn.addEventListener('click', e => {
+      $('.btn--review').dataset.reviewId = e.target.dataset.reviewId
+      $('.model__review').classList.add('open')
+    })
+  }
+}
+
+if (deleteReviewBtnsPopup) {
+  for (const btn of deleteReviewBtnsPopup) {
+    btn.addEventListener('click', e => {
+      $('.model__deleteReview-btn-delete').dataset.reviewId =
+        e.target.dataset.reviewIdDelete
+      $('.model__deleteReview').classList.add('open')
+    })
+  }
+}
+
+if (deleteReviewForm) {
+  deleteReviewForm.addEventListener('submit', e => {
+    e.preventDefault()
+  })
+  deleteReviewBtn.addEventListener('click', async e => {
+    const { reviewId } = e.target.dataset
+    deleteReviewBtn.textContent = 'Processing...'
+    await deleteReviewTour(reviewId)
+    deleteReviewBtn.textContent = 'Delete'
+  })
+  cancelReviewDeleteBtn.addEventListener('click', () => {
+    $('.model__deleteReview').classList.remove('open')
+  })
+  $('.model__deleteReview-overlay').addEventListener('click', () => {
+    $('.model__deleteReview').classList.remove('open')
+  })
+}
+
+if (reviewPopup)
+  reviewPopup.addEventListener('click', () => {
+    $('.model__review').classList.add('open')
+  })
+
+if (reviewForm) {
+  handleRangtings()
+  hideModel()
+  reviewForm.addEventListener('submit', async e => {
+    e.preventDefault()
+    if (editReviewBtn.length > 0) {
+      console.log('hi')
+      await handleReviewTour('edit')
+    } else {
+      console.log('hello')
+      await handleReviewTour('create')
+    }
+  })
+}
+
+if (likedTourBtn) {
+  handleLikeTourBrowser(likedTourBtn, 'liked')
+}
+
+if (likeTourBtn) {
+  handleLikeTourBrowser(likeTourBtn, 'like')
+}

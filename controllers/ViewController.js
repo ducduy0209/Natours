@@ -1,4 +1,6 @@
 const Tour = require('../models/tourModel')
+const User = require('../models/userModel')
+const Review = require('../models/reviewModel')
 const Booking = require('../models/bookingModel')
 const AppError = require('../utils/appError')
 const catchAsync = require('../utils/catchAsync')
@@ -46,6 +48,22 @@ class ViewController {
     })
   })
 
+  getMyReviews = catchAsync(async (req, res, next) => {
+    if (!req.user) {
+      return res.status(200).redirect(`/`)
+    }
+    // 1) Find all review
+    const reviews = await Review.find({ user: req.user.id })
+    // 2) Find tours with the returned IDs
+    const tourIDs = reviews.map(el => el.tour)
+    const tours = await Tour.find({ _id: { $in: tourIDs } })
+    return res.status(200).render('reviews', {
+      title: 'My reviews',
+      tours,
+      reviews
+    })
+  })
+
   getLoginForm = (req, res) => {
     if (req.user) {
       return res.status(200).redirect(`/`)
@@ -57,7 +75,7 @@ class ViewController {
 
   getAccount = (req, res) => {
     res.status(200).render('account', {
-      title: 'Your account'
+      title: 'My account'
     })
   }
 
@@ -85,6 +103,19 @@ class ViewController {
     }
     return res.status(200).render('resetPassword', {
       title: 'Reset your password'
+    })
+  }
+
+  getMyFavouriteTours = async (req, res) => {
+    // 1) Find all favorites tours
+    const user = await User.findOne({ _id: req.user.id })
+    // 2) Find tours with the returned IDs
+    const tourIDs = user.favouriteTours.map(el => el._id)
+    const tours = await Tour.find({ _id: { $in: tourIDs } })
+
+    res.status(200).render('overview', {
+      title: 'My favorites tours',
+      tours
     })
   }
 }
