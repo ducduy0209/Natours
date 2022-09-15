@@ -29,6 +29,7 @@ router
 
 router.route('/distances/:latlng/unit/:unit').get(TourController.getDistances)
 
+router.get('/search/:text', TourController.getSearchTours)
 router
   .route('/')
   .get(TourController.getAllTours)

@@ -113,6 +113,8 @@ const tourSchema = new mongoose.Schema(
   }
 )
 
+tourSchema.index({ name: 'text' })
+
 tourSchema.virtual('durationWeeks').get(function() {
   return (this.duration / 7).toFixed(2)
 })

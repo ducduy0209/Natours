@@ -9,6 +9,7 @@ import { forgotPassword, resetPassword } from './forgotAndReset'
 import { handleRangtings, hideModel } from './handleReviewModel'
 import { handleReviewTour, deleteReviewTour } from './review'
 import { handleLikeTourBrowser } from './handleLikeTour'
+import { searchTour } from './search'
 
 const $ = document.querySelector.bind(document)
 const $$ = document.querySelectorAll.bind(document)
@@ -32,12 +33,46 @@ const deleteReviewBtnsPopup = $$('.review__trash-icon')
 const deleteReviewForm = $('.model__deleteReview-form')
 const deleteReviewBtn = $('.model__deleteReview-btn-delete')
 const cancelReviewDeleteBtn = $('.model__deleteReview-btn-cancel')
+const inputSearchTour = $('.nav__search-input')
+const listResultsSearch = $('.results__search')
+const navSearch = $('.nav__search')
+let typingTimer
 
 // DELEGATION
 if (mapBox) {
   const locations = JSON.parse(mapBox.getAttribute('data-locations'))
   displayMap(locations)
 }
+
+navSearch.addEventListener('submit', async e => {
+  e.preventDefault()
+  if (inputSearchTour.value !== '') {
+    if (listResultsSearch.children.length > 1) {
+      for (let i = 1; i < listResultsSearch.children.length; i++) {
+        listResultsSearch.removeChild(listResultsSearch.children[i])
+        i--
+      }
+    }
+    $('.dashed-loading').style.display = 'block'
+    await searchTour(inputSearchTour.value)
+    $('.dashed-loading').style.display = 'none'
+  }
+})
+
+inputSearchTour.addEventListener('blur', () => {
+  setTimeout(() => {
+    listResultsSearch.style.display = 'none'
+  }, 10)
+})
+
+inputSearchTour.addEventListener('input', () => {
+  listResultsSearch.style.display = 'none'
+})
+
+inputSearchTour.addEventListener('focus', () => {
+  if (inputSearchTour.value !== '' && listResultsSearch.children.length > 1)
+    listResultsSearch.style.display = 'block'
+})
 
 if (loginForm)
   loginForm.addEventListener('submit', async e => {

@@ -218,6 +218,19 @@ class TourController {
       }
     })
   })
+
+  getSearchTours = catchAsync(async (req, res, next) => {
+    const textSearch = req.params.text.split('-').join(' ')
+    const tours = await Tour.find({ $text: { $search: textSearch } })
+
+    res.status(200).json({
+      status: 'success',
+      results: tours.length,
+      data: {
+        tours
+      }
+    })
+  })
 }
 
 module.exports = new TourController()
