@@ -12,17 +12,16 @@ const signToken = id => {
   })
 }
 
-const createSendToken = (user, statusCode, res) => {
+const createSendToken = (user, statusCode, req, res) => {
   const token = signToken(user._id)
 
   const cookieOptions = {
     expiresIn: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
-    httpOnly: true
+    httpOnly: true,
+    secure: req.secure || req.headers['x-forwarded-proto'] === 'https'
   }
-
-  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true
 
   res.cookie('jwt', token, cookieOptions)
 
@@ -54,7 +53,7 @@ class AuthController {
       'host'
     )}/confirm-email/${resetToken}`
     await new Email(newUser, url).sendWelcome()
-    createSendToken(newUser, 201, res)
+    createSendToken(newUser, 201, req, res)
   })
 
   login = catchAsync(async (req, res, next) => {
@@ -70,7 +69,7 @@ class AuthController {
       return next(new AppError('Incorrect email or password!', 401))
     }
     // 3) If everything ok, send token to client
-    createSendToken(user, 200, res)
+    createSendToken(user, 200, req, res)
   })
 
   protect = catchAsync(async (req, res, next) => {
@@ -230,7 +229,7 @@ class AuthController {
     await user.save()
     // Update passwordChangedAt property for the user
     // Log the user in, send JWT
-    createSendToken(user, 200, res)
+    createSendToken(user, 200, req, res)
   })
 
   updatePassword = catchAsync(async (req, res, next) => {
@@ -252,7 +251,7 @@ class AuthController {
     user.passwordConfirm = req.body.passwordConfirm
     await user.save()
     // 4) Log user in, send JWT
-    createSendToken(user, 200, res)
+    createSendToken(user, 200, req, res)
   })
 
   confirmEmail = catchAsync(async (req, res, next) => {
