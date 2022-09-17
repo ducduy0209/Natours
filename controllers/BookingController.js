@@ -63,9 +63,9 @@ class BookingController {
     let event
     try {
       event = stripe.webhooks.constructEvent(
-        req.rawBody,
+        req.body,
         signature,
-        process.env.STRIPE_WEBHOOK_KEY
+        process.env.STRIPE_WEBHOOK_SECRET
       )
     } catch (e) {
       res.status(400).send(`Webhook error: ${e.message}`)
