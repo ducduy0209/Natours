@@ -1,6 +1,7 @@
 /* eslint-disable */
 import '@babel/polyfill'
 import { login, logout } from './logged'
+import { showAlert } from './alerts'
 import { displayMap } from './mapbox'
 import { updateSettings } from './updateSettings'
 import { bookTour } from './stripe'
@@ -14,6 +15,7 @@ import { searchTour } from './search'
 const $ = document.querySelector.bind(document)
 const $$ = document.querySelectorAll.bind(document)
 // DOM ELEMENTS
+const alertMessage = $('body').dataset.alert
 const loginForm = $('.form.form--login')
 const mapBox = $('#map')
 const logoutBtn = $('.nav__el--loggout')
@@ -36,7 +38,6 @@ const cancelReviewDeleteBtn = $('.model__deleteReview-btn-cancel')
 const inputSearchTour = $('.nav__search-input')
 const listResultsSearch = $('.results__search')
 const navSearch = $('.nav__search')
-let typingTimer
 
 // DELEGATION
 if (mapBox) {
@@ -225,3 +226,5 @@ if (likedTourBtn) {
 if (likeTourBtn) {
   handleLikeTourBrowser(likeTourBtn, 'like')
 }
+
+if (alertMessage) showAlert('success', alertMessage, 15)

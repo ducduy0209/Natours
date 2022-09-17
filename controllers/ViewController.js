@@ -118,6 +118,14 @@ class ViewController {
       tours
     })
   }
+
+  alerts = (req, res, next) => {
+    const { alert } = req.query
+    if (alert === 'booking')
+      res.locals.alert =
+        "Your booking was successfully! Please check your email for a comfirmation. if your booking doesn't show up here immediatly, please come back later."
+    next()
+  }
 }
 
 module.exports = new ViewController()

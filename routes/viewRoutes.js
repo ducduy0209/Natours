@@ -22,6 +22,8 @@ router.use((req, res, next) => {
   next()
 })
 
+router.use(ViewController.alerts)
+
 router.get(
   '/',
   // BookingController.createBookingCheckout,
