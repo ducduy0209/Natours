@@ -8,7 +8,6 @@ const mongoSanitize = require('express-mongo-sanitize')
 const xss = require('xss-clean')
 const hpp = require('hpp')
 const cookieParser = require('cookie-parser')
-const bodyParser = require('body-parser')
 const compression = require('compression')
 
 const app = express()
@@ -51,7 +50,7 @@ if (process.env.NODE_ENV === 'development') {
 
 app.post(
   '/webhook-checkout',
-  bodyParser.raw({ type: 'application/json' }),
+  express.raw({ type: 'application/json' }),
   BookingController.webhookCheckout
 )
 
