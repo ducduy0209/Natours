@@ -19,4 +19,4 @@ Website has been deployed: https://natours-duee.herokuapp.com/
 - Confirm email when signup
 - Admin: decentralization, manage users, tours, bookings, reviews,...
 - Edit and delete review
-- _Many more for you to discover_
+- _Many more for you to discover_ 🤗
