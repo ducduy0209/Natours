@@ -21,6 +21,7 @@ const tourRouter = require('./routes/tourRoutes')
 const userRouter = require('./routes/userRoutes')
 const reviewRouter = require('./routes/reviewRoutes')
 const bookingRouter = require('./routes/bookingRoutes')
+const BookingController = require('./controllers/BookingController')
 const viewRouter = require('./routes/viewRoutes')
 
 app.set('view engine', 'pug')
@@ -84,6 +85,11 @@ const limiter = rateLimit({
 
 app.use('/api', limiter)
 
+app.post(
+  '/webhook-checkout',
+  express.raw({ type: 'application/json' }),
+  BookingController.webhookCheckout
+)
 // 3) ROUTES
 
 app.use('/', viewRouter)

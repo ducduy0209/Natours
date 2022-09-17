@@ -1,7 +1,7 @@
 const express = require('express')
 const ViewController = require('../controllers/ViewController')
 const AuthController = require('../controllers/AuthController')
-const BookingController = require('../controllers/BookingController')
+// const BookingController = require('../controllers/BookingController')
 
 const router = express.Router()
 
@@ -24,7 +24,7 @@ router.use((req, res, next) => {
 
 router.get(
   '/',
-  BookingController.createBookingCheckout,
+  // BookingController.createBookingCheckout,
   AuthController.isLoggedIn,
   ViewController.getOverview
 )
