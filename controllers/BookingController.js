@@ -8,9 +8,8 @@ const HandlerFactory = require('./HandlerFactory')
 
 const createBookingCheckout = async session => {
   const tour = session.client_reference_id
-  const user = (await User.findOne({ email: session.customer_details.email }))
-    ._id
-  const price = session.object.amount_total / 100
+  const user = (await User.findOne({ email: session.customer_email }))._id
+  const price = session.amount_total / 100
   await Booking.create({ user, tour, price })
   await User.findByIdAndUpdate(user, { $push: { bookings: tour } })
 }
@@ -73,7 +72,7 @@ class BookingController {
     }
 
     if (event.type === 'checkout.session.completed') {
-      await createBookingCheckout(event.data)
+      await createBookingCheckout(event.data.object)
     }
 
     res.status(200).json({ recived: true })
