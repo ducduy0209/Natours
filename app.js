@@ -8,6 +8,7 @@ const mongoSanitize = require('express-mongo-sanitize')
 const xss = require('xss-clean')
 const hpp = require('hpp')
 const cookieParser = require('cookie-parser')
+const bodyParser = require('body-parser')
 const compression = require('compression')
 
 const app = express()
@@ -48,6 +49,12 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'))
 }
 
+app.post(
+  '/webhook-checkout',
+  bodyParser.raw({ type: 'application/json' }),
+  BookingController.webhookCheckout
+)
+
 // Body parse, reading date from body into req.body
 app.use(express.json({ limit: '10kb' }))
 app.use(express.urlencoded({ limit: '10kb', extended: true }))
@@ -82,14 +89,8 @@ const limiter = rateLimit({
   windowMs: 60 * 60 * 1000,
   message: 'Too many requests from this IP! Please try again in an hour.'
 })
-
 app.use('/api', limiter)
 
-app.post(
-  '/webhook-checkout',
-  express.raw({ type: 'application/json' }),
-  BookingController.webhookCheckout
-)
 // 3) ROUTES
 
 app.use('/', viewRouter)
