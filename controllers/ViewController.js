@@ -60,7 +60,8 @@ class ViewController {
     return res.status(200).render('reviews', {
       title: 'My reviews',
       tours,
-      reviews
+      reviews,
+      deleteReview: true
     })
   })
 
@@ -126,6 +127,25 @@ class ViewController {
         "Your booking was successfully! Please check your email for a comfirmation. if your booking doesn't show up here immediatly, please come back later."
     next()
   }
+
+  getManageToursForm = catchAsync(async (req, res, next) => {
+    const tours = await Tour.find()
+
+    res.status(200).render('overview', {
+      title: 'Manage tours',
+      tours,
+      edit: true
+    })
+  })
+
+  getManageUsersForm = catchAsync(async (req, res, next) => {
+    const users = await User.find()
+    res.status(200).render('manageUsers', {
+      title: 'Manage users',
+      users,
+      deleteUser: true
+    })
+  })
 }
 
 module.exports = new ViewController()

@@ -1,0 +1,63 @@
+extends base
+
+mixin navItem(link, text, icon, active)
+  li(class=`${active ? 'side-nav--active' : ''}`)
+    a(href=`${link}`)
+      svg
+        use(xlink:href=`/img/icons.svg#icon-${icon}`)
+      | #{text}
+
+mixin rowUser(name, role, email, id, i)
+  tr
+    th(scope='row')= i
+    td= name
+    td= role
+    td= email
+    td 
+      i.fa-solid.fa-spinner.user__edit-load(style='display: none')
+      i.fa-solid.fa-pen.user__edit-icon(data-user-id=`${id}`)
+      i.fa-solid.fa-trash.user__delete-icon(data-user-id-delete=`${id}`)
+
+block content 
+  main.main
+    .user-view
+      nav.user-view__menu
+        ul.side-nav
+          +navItem('/me', 'Settings', 'settings')
+          +navItem('/my-tours', 'My bookings', 'briefcase')
+          +navItem('my-reviews', 'My reviews', 'star')
+          +navItem('/my-favourite-tours', 'My favourite tours', 'heart')
+          +navItem('#', 'Billing', 'credit-card')
+        .admin-nav
+          h5.admin-nav__heading Admin
+          ul.side-nav
+            +navItem('/manage-tours', 'Manage tours', 'map')
+            +navItem('#', 'Manage users', 'users', true)
+            +navItem('#', 'Manage reviews', 'star')
+            +navItem('#', 'Manage bookings', 'briefcase')
+      .user-view__content
+        .user-view__users-container
+          h2(style="display: block").heading-secondary.ma-bt-md Manage users
+          section.ftco-section
+            .container
+              .row
+                .col-md-12
+                  .table-wrap
+                    table.table.text-center
+                      thead.thead-primary
+                        tr
+                          th #
+                          th Full Name
+                          th Role
+                          th Email Address
+                          th Actions
+                      tbody
+                        each userItem, i in users
+                          if userItem.email !== user.email
+                            +rowUser(userItem.name, userItem.role, userItem.email, userItem._id, i + 1)
+
+      include _modelEditUser 
+      include _modelDelete
+
+
+

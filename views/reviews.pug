@@ -27,22 +27,26 @@ block content
           +navItem('#', 'My reviews', 'star', true)
           +navItem('/my-favourite-tours', 'My favourite tours', 'heart')
           +navItem('#', 'Billing', 'credit-card')
+        - if(user.role === 'admin')
+          .admin-nav
+            h5.admin-nav__heading Admin
+            ul.side-nav
+              +navItem('manage-tours', 'Manage tours', 'map')
+              +navItem('manage-users', 'Manage users', 'users')
+              +navItem('#', 'Manage reviews', 'star')
+              +navItem('#', 'Manage bookings', 'briefcase')
       .user-view__content
         .user-view__review-container
           h2.heading-secondary.ma-bt-md Your Reviews
-          ul.user-view__list-reviews
-            each tour in tours
-              include _modelReview
-              each review in reviews 
-                - if(JSON.stringify(tour.id) === JSON.stringify(review.tour))
-                  +reviewItem(`/tour/${tour.slug}`, tour.name, review.review, review.rating, review._id)
+          if tours.length > 0
+            ul.user-view__list-reviews
+              each tour in tours
+                include _modelReview
+                each review in reviews 
+                  - if(JSON.stringify(tour.id) === JSON.stringify(review.tour))
+                    +reviewItem(`/tour/${tour.slug}`, tour.name, review.review, review.rating, review._id)
+          else
+            h3(style='text-align: center; font-size: 18px;') You don't have any reviews yet!
 
-      .model__deleteReview
-        .model__deleteReview-overlay 
-        .model__deleteReview-body 
-          h2.heading-secondary.ma-bt-lg Are you sure you want to delete your review ?
-          form.form.model__deleteReview-form
-            .form__group.model__deleteReview-btns
-              button.model__deleteReview-btn-delete.btn.btn--green Delete
-              button.model__deleteReview-btn-cancel.btn Cancel
+      include _modelDelete
       

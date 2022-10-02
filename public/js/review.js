@@ -38,7 +38,7 @@ const reviewTour = async (data, id, type) => {
 }
 
 export const handleReviewTour = async type => {
-  document.querySelector('.btn--review').textContent = 'Reviewing...'
+  document.querySelector('.btn--review').textContent = 'Processing...'
   const id =
     type === 'create'
       ? document.querySelector('.btn--review').dataset.tourIdReview

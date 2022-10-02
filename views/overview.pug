@@ -41,4 +41,36 @@ block content
               span.card__footer-value #{tour.ratingsAverage}
               | 
               span.card__footer-text= `rating (${tour.ratingsQuantity})`
-            a.btn.btn--green.btn--small(href=`/tour/${tour.slug}`) Details
+            if !edit
+              a.btn.btn--green.btn--small(href=`/tour/${tour.slug}`) Details
+            else 
+              button.btn.btn--green.btn--small.btn--popup__edit-tour(data-tour-id=`${tour.id}`) Edit
+    if edit
+      .model__editTour
+        .model__editTour-overlay 
+        .model__editTour-body 
+          h2.heading-secondary.ma-bt-lg Edit tour now
+          form.form.form--edit-tour
+            .form__group
+              label.form__label(for='name') Name
+              input#name.form__input(type='text', placeholder='The hiker tour', required)
+            .form__group
+              label.form__label(for='price') Price ($)
+              input#price.form__input(type='text', placeholder='496', required)
+            .form__group
+              label.form__label(for='summary') Summary
+              input#summary.form__input(type='text', placeholder='Brief summary of it', required)
+            .form__group
+              label.form__label(for='description') Description
+              input#description.form__input(type='text', placeholder='Brief description of it', required)
+            .form__group
+              label.form__label(for='duration') Duration (days)
+              input#duration.form__input(type='text', placeholder='1', required)
+            .form__group
+              label.form__label(for='maxGroupSize') Max group size (person)
+              input#maxGroupSize.form__input(type='text', placeholder='1', required)
+            .form__group.model__editTour-btns
+                button.model__editTour-btn-delete.btn Delete
+                button.model__editTour-btn-edit.btn.btn--green Edit
+                button.model__editTour-btn-cancel.btn Cancel
+          

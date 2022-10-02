@@ -57,9 +57,6 @@ class HandlerFactory {
 
   updateOne = Model =>
     catchAsync(async (req, res, next) => {
-      if (req.body.role) {
-        delete req.body.role
-      }
       const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
         runValidators: true

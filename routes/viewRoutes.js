@@ -30,6 +30,7 @@ router.get(
   AuthController.isLoggedIn,
   ViewController.getOverview
 )
+
 router.get(
   '/my-reviews',
   AuthController.isLoggedIn,
@@ -54,5 +55,18 @@ router.get('/forgot-password', ViewController.getForgotPasswordForm)
 router.get('/reset-password/:token', ViewController.resetPasswordForm)
 router.get('/login', ViewController.getLoginForm)
 router.get('/signup', ViewController.getSignupForm)
+
+router.get(
+  '/manage-tours',
+  AuthController.protect,
+  AuthController.restrictTo('admin'),
+  ViewController.getManageToursForm
+)
+router.get(
+  '/manage-users',
+  AuthController.protect,
+  AuthController.restrictTo('admin'),
+  ViewController.getManageUsersForm
+)
 
 module.exports = router

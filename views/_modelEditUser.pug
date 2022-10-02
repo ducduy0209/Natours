@@ -1,0 +1,21 @@
+.model__editUser
+  .model-editUser__overlay 
+  .model-editUser__body 
+    h2.heading-secondary.ma-bt-lg Update user now
+    form.form.form--edit-user
+      .form__group
+        label.form__label(for='name-user') Name
+        input#name-user.form__input(type='text', placeholder='Duc Duy', required)
+      .form__group
+        label.form__label(for='email-user') Email
+        input#email-user.form__input(type='email', placeholder='duy@example.com', required)
+      .form__group
+        label.form__label(for='role') Role
+        select#role
+          option(value='admin') Admin
+          option(value='lead-guide') Lead Guide
+          option(value='guide') Guide
+          option(value='user') User
+      .form__group
+        button.btn.btn--green.btn--update-user(data-user-id-edit=``) Update
+    i.fa-solid.fa-xmark.close__edit-user
