@@ -69,4 +69,11 @@ router.get(
   ViewController.getManageUsersForm
 )
 
+router.get(
+  '/manage-reviews',
+  AuthController.protect,
+  AuthController.restrictTo('admin'),
+  ViewController.getManageReviewsForm
+)
+
 module.exports = router

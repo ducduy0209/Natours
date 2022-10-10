@@ -146,6 +146,17 @@ class ViewController {
       deleteUser: true
     })
   })
+
+  getManageReviewsForm = catchAsync(async (req, res, next) => {
+    const reviews = await Review.find()
+      .populate('user')
+      .populate({ path: 'tour', select: 'slug name' })
+    res.status(200).render('manageReviews', {
+      title: 'Manage reviews',
+      reviews,
+      deleteReview: true
+    })
+  })
 }
 
 module.exports = new ViewController()

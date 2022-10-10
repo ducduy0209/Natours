@@ -1644,7 +1644,7 @@ body {
 }
 
 .user-view__review-container {
-  max-width: 68rem;
+  max-width: 78rem;
   margin: 0 auto;
 }
 
@@ -1890,6 +1890,9 @@ col-md-6 {
   background-color: #fff !important; 
 }
 
+.manageReview__edit-icon,
+.manageReview__load-icon,
+.manageReview__delete-icon,
 .user__edit-load,
 .user__delete-icon,
 .user__edit-icon {
@@ -1898,16 +1901,18 @@ col-md-6 {
   cursor: pointer;
 }
 
+.manageReview__edit-icon:hover,
+.manageReview__delete-icon:hover,
 .user__delete-icon:hover,
 .user__edit-icon:hover {
   color: #0f923b;
 }
 
-
 .user__delete-icon {
   margin-left: 5px;
 }
-.edit-icon {
+
+.user__edit-icon {
   margin-right: 5px;
 }
 

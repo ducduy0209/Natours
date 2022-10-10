@@ -1,0 +1,65 @@
+extends base
+
+mixin navItem(link, text, icon, active)
+  li(class=`${active ? 'side-nav--active' : ''}`)
+    a(href=`${link}`)
+      svg
+        use(xlink:href=`/img/icons.svg#icon-${icon}`)
+      | #{text}
+
+mixin rowReview(nameTour, nameUser, email, content, rating, id, i)
+  tr
+    th(scope='row')= i
+    td= nameTour
+    td= nameUser
+    td= email
+    td(style="overflow: hidden;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 2; border-bottom: none")= content
+    td= `${rating} / 5`
+    td 
+      i.fa-solid.fa-spinner.manageReview__load-icon(style='display: none')
+      i.fa-solid.fa-pen.manageReview__edit-icon(data-review-id=`${id}`)
+      i.fa-solid.fa-trash.manageReview__delete-icon(data-review-id-delete=`${id}`)
+
+block content 
+  main.main
+    .user-view
+      nav.user-view__menu
+        ul.side-nav
+          +navItem('/me', 'Settings', 'settings')
+          +navItem('/my-tours', 'My bookings', 'briefcase')
+          +navItem('/my-reviews', 'My reviews', 'star')
+          +navItem('/my-favourite-tours', 'My favourite tours', 'heart')
+          +navItem('#', 'Billing', 'credit-card')
+        - if(user.role === 'admin')
+          .admin-nav
+            h5.admin-nav__heading Admin
+            ul.side-nav
+              +navItem('/manage-tours', 'Manage tours', 'map')
+              +navItem('/manage-users', 'Manage users', 'users')
+              +navItem('#', 'Manage reviews', 'star', true)
+              +navItem('#', 'Manage bookings', 'briefcase')
+      .user-view__content
+        .user-view__review-container
+          h2.heading-secondary.ma-bt-md Manage Reviews
+          section.ftco-section
+            .container
+              .row
+                .col-md-12
+                  .table-wrap
+                    table.table.text-center
+                      thead.thead-primary
+                        tr
+                          th #
+                          th Tour Name
+                          th User Name
+                          th Email Address
+                          th Content
+                          th Rating
+                          th Actions
+                      tbody
+                        each review, i in reviews
+                          +rowReview(review.tour.name, review.user.name, review.user.email, review.review, review.rating, review._id, i + 1)
+
+      include _modelReview 
+      include _modelDelete
+      

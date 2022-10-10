@@ -13,6 +13,8 @@
           input#review-rating.form__input(type='number', disabled, required, value='1')
           input#add(type='button', value='+')
       .form__group
-        if tour.id
+        if tour
           button.btn.btn--green.btn--review(data-tour-id-review=`${tour.id}`) Review
+        else
+          button.btn.btn--green.btn--review(data-tour-id-review=``) Review
     i.fa-solid.fa-xmark.close__review

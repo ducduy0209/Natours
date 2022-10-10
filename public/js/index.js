@@ -14,6 +14,7 @@ import { searchTour } from './search'
 import { fillFullInforFormTour, editTour } from './handleEditTour'
 import { deleteOne } from './deleteOne'
 import { fillFormUserEdit, editUser } from './handleManageUser'
+import { fillFullInforFormReview, manageEditReview } from './handleManageReview'
 
 const $ = document.querySelector.bind(document)
 const $$ = document.querySelectorAll.bind(document)
@@ -52,6 +53,8 @@ const deleteUserBtn = $('.model__deleteUser-btn-delete')
 const editUserBtnsPopup = $$('.user__edit-icon')
 const editUserForm = $('.form--edit-user')
 const editUserBtn = $('.btn--update-user')
+const manageDeleteReviewBtnsPopup = $$('.manageReview__delete-icon')
+const manageEditReviewBtnsPopup = $$('.manageReview__edit-icon')
 
 // DELEGATION
 if (mapBox) {
@@ -223,14 +226,16 @@ if (reviewPopup)
 if (reviewForm) {
   handleRangtings()
   hideModel()
-  reviewForm.addEventListener('submit', async e => {
-    e.preventDefault()
-    if (editReviewBtns.length > 0) {
-      await handleReviewTour('edit')
-    } else {
-      await handleReviewTour('create')
-    }
-  })
+  if (manageEditReviewBtnsPopup.length <= 0) {
+    reviewForm.addEventListener('submit', async e => {
+      e.preventDefault()
+      if (editReviewBtns.length > 0) {
+        await handleReviewTour('edit')
+      } else {
+        await handleReviewTour('create')
+      }
+    })
+  }
 }
 
 if (likedTourBtn) {
@@ -352,5 +357,44 @@ if (editUserBtnsPopup.length > 0) {
 
   $('.close__edit-user').addEventListener('click', () => {
     $('.model__editUser').classList.remove('open')
+  })
+}
+
+if (manageDeleteReviewBtnsPopup.length > 0) {
+  for (const btn of manageDeleteReviewBtnsPopup) {
+    btn.addEventListener('click', e => {
+      $('.model__deleteReview-btn-delete').dataset.reviewId =
+        e.target.dataset.reviewIdDelete
+      $('.model__deleteReview').classList.add('open')
+    })
+  }
+}
+
+if (manageEditReviewBtnsPopup.length > 0) {
+  for (const btn of manageEditReviewBtnsPopup) {
+    btn.addEventListener('click', async e => {
+      btn.style.display = 'none'
+      btn.parentElement.querySelector(
+        '.manageReview__load-icon'
+      ).style.display = 'inline-block'
+      await fillFullInforFormReview(btn.dataset.reviewId)
+      btn.style.display = 'inline-block'
+      btn.parentElement.querySelector(
+        '.manageReview__load-icon'
+      ).style.display = 'none'
+      $('.btn--review').dataset.reviewId = e.target.dataset.reviewId
+      $('.model__review ').classList.add('open')
+    })
+  }
+
+  reviewForm.addEventListener('submit', e => e.preventDefault())
+
+  $('.btn--review').addEventListener('click', async e => {
+    const id = e.target.dataset.reviewId
+    const review = document.getElementById('review-text').value
+    const rating = document.getElementById('review-rating').value
+    $('.btn--review').textContent = 'Processing...'
+    await manageEditReview(id, { review, rating })
+    $('.btn--review').textContent = 'Review'
   })
 }
