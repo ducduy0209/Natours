@@ -2,7 +2,7 @@
 
 Built using modern technologies: Nodejs, Express ,MongoDB, Mongoose, Stripe and many more 🥰
 
-Website has been deployed: https://natours-duee.herokuapp.com/
+Website has been deployed: https://natours-duee.herokuapp.com/ (But now it's broken)
 
 ## Application has some features:
 
